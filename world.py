@@ -12,10 +12,10 @@ class World:
 
     def test_init(self):
         for c in range(COLS):
-            tile = Tile(CS, CS, c, ROWS-1, SKY_BLUE)
+            tile = Tile(CS, CS, c, ROWS-1, BROWN_P)
             self.map[(c, ROWS-1)] = tile
         for r in range(ROWS):
-            tile = Tile(CS, CS, COLS-1, r, SKY_BLUE)
+            tile = Tile(CS, CS, COLS-1, r, BROWN_P)
             self.map[(COLS-1,r)] = tile
 
     def update(self, dt):

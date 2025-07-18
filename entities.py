@@ -1,12 +1,12 @@
 from settings import *
 from utils import * 
-from particles import Particle, FloatingParticle
+from particles import Particle, FloatingParticle, spark_collision
 
 class Player:
     def __init__(self, eng):
         self.eng = eng
         self.radius = PLAYER_RADIUS
-        self.color = WHITE
+        self.color = RED_P
         self.pos = [CENTER[0], CENTER[1]]
         self.size = [PLAYER_NORM_SIZE[0], PLAYER_NORM_SIZE[1]]
         self.vel = [0, 0]
@@ -16,6 +16,9 @@ class Player:
         self.map_pos = [0,0]
         self.dt_speed = 0
         self.collisions = {'left': False, 'right': False, 'up': False, 'down': False}
+        self.first_hit = {'left': False, 'right': False, 'up': False, 'down': False}
+        self.was_colliding = {'left': False, 'right': False, 'up': False, 'down': False}
+        self.kick_back = [0,0]
 
     def update_dt_speed(self, dt): return dt * self.speed
 
@@ -27,22 +30,54 @@ class Player:
             self.jumps -= 1
 
     def update(self, movement, dt):
-        self.vel[0] = (movement[1] - movement[0])
+        self.vel[0] = (movement[1] - movement[0]) + self.kick_back[0]
         self.vel[1] = min(PLAYER_FALL_SPEED, self.vel[1] + GRAVITY) 
         self.update_map_pos()
         dt_speed = self.update_dt_speed(dt)
+
+        if abs(self.kick_back[0]) > 0.2:
+            self.kick_back[0] *= 0.9
+        else:
+            self.kick_back[0] = 0
+        
 
         nearby_rects = self.eng.world.get_nearby_rects(self.pos)
         self.movement_handler(dt_speed, self.vel, nearby_rects)
 
         if self.collisions['up']:
-            pass
+            if not self.was_colliding['up']: self.first_hit['up'] = True  
+            else: self.first_hit['up'] = False 
+            self.was_colliding['up'] = True
+        else:
+            self.first_hit['up'] = False
+            self.was_colliding['up'] = False
+
         if self.collisions['down']:
             self.jumps = PLAYER_MAX_JUMPS
+            if not self.was_colliding['down']:
+                self.first_hit['down'] = True  
+            else:
+                self.first_hit['down'] = False 
+            self.was_colliding['down'] = True
+        else:
+            self.first_hit['down'] = False
+            self.was_colliding['down'] = False
+
         if self.collisions['left']:
-            pass
+            if not self.was_colliding['left']: self.first_hit['left'] = True  
+            else: self.first_hit['left'] = False 
+            self.was_colliding['left'] = True
+        else:
+            self.first_hit['left'] = False
+            self.was_colliding['left'] = False
+
         if self.collisions['right']:
-            pass
+            if not self.was_colliding['right']: self.first_hit['right'] = True  
+            else: self.first_hit['right'] = False 
+            self.was_colliding['right'] = True
+        else:
+            self.first_hit['right'] = False
+            self.was_colliding['right'] = False
         
         self.add_particles()
 
@@ -50,6 +85,8 @@ class Player:
         self.update(movement, dt)
         pg.draw.circle(surf, self.color, (self.pos[0]+HALF_CS, self.pos[1]+HALF_CS), self.radius, width=0)
         #pg.draw.rect(surf, WHITE, (self.pos[0], self.pos[1], CS, CS), 1)
+        pos = self.center()
+        pg.draw.circle(surf, WHITE, (pos[0], pos[1]), 5, width=0)
 
     def get_hitable_tiles(self, rect, nearby_tiles):
         hits = []
@@ -83,18 +120,25 @@ class Player:
                 self.pos[1] = rect.y    
                 self.collisions['down'] = True
             if vel[1] < 0:
-                curr_rect.top = tile.bottom
+                rect.top = tile.bottom
                 self.pos[1] = rect.y
                 self.collisions['up'] = True
 
     def add_particles(self):
         # particle when jumping 
         up, down, left, right = (self.collisions[k] for k in ('up', 'down', 'left', 'right'))
+        fup, fdown, fleft, fright = (self.first_hit[k] for k in ('up', 'down', 'left', 'right'))
         center = self.center()
         if not up and not down and not left and not right:
             rand_pos = [random.randrange(-3,3) + center[0], center[1] +random.randrange(-3,3)]
             p = Particle(self.eng, rand_pos, v_multiply_scalar(self.vel, -0.8), 3.5, 0.16, WHITE)
             self.eng.particles.append(p)
+        elif (left and fleft) or (right and fright) or (down and fdown):
+            spark_collision(eng=self.eng, amnt=14, pos=self.center(), vel=self.vel, color=RED_P, rnd_range=50)
+            if left: 
+                self.vel[0] = 1
+            elif right: 
+                self.kick_back[0] = -3
         else:
             #rand_pos = [random.randrange(-3,3) + center[0], center[1] +random.randrange(-3,3)]
             if rnd_percent_chance(0.45):
@@ -111,9 +155,6 @@ class Player:
                                     )
                 self.eng.particles.append(p)       
 
-    def rect(self):
-        return pg.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1])
-
-    def center(self):
-        return [self.pos[0] + self.size[0]//2, self.pos[1] + self.size[1]//2]
+    def rect(self): return pg.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1])
+    def center(self): return [self.pos[0] + self.size[0]//2, self.pos[1] + self.size[1]//2]
         

@@ -1,5 +1,5 @@
 from settings import * 
-from utils import * 
+from utils import *
 
 class Particle:
     def __init__(self, eng, p, v, r, decay_rate, color):
@@ -38,13 +38,13 @@ class FloatingParticle(Particle):
 class Spark:
     def __init__(self, p, angle, speed, scale, decay_rate, limit, color, steepness=0.3):
         self.pos = p.copy()
-        self.angle = deg_to_rad(angle)
+        self.angle = math.radians(angle)
         self.speed = speed
         self.scale = scale
         self.decay_rate = decay_rate
         self.limit = limit
         self.color = color
-        self.steepness = deg_to_rad(steepness)
+        self.steepness = math.radians(steepness)
         self.vel = self.get_vel_v(self.angle)
         self.done = False
 
@@ -82,3 +82,22 @@ class Spark:
         ]
         pg.draw.polygon(surf, self.color, points)
 
+def spark_collision(eng, amnt, pos, vel, color, rnd_range=30):
+    vel = v_multiply_scalar(vel, -1)
+    angle = v_angle(vel)
+    offset = [math.cos(math.atan(angle))*16, math.sin(math.atan(angle))*16]
+    for i in range(amnt): 
+        rnd_angle = angle + random.randrange(-rnd_range,rnd_range)
+        speed = random.uniform(3.5, 4.5)
+        d_rate = random.uniform(0.9, 0.95)
+        spark = Spark(
+                p=[pos[0]-offset[0], pos[1]-offset[1]],
+                angle=rnd_angle,
+                speed=speed,
+                scale=0.8, 
+                decay_rate=d_rate,
+                limit=0.3,
+                color=color,
+                steepness=20
+            )
+        eng.sparks.append(spark)

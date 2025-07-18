@@ -2,7 +2,7 @@ from settings import *
 from utils import * 
 from entities import *
 from world import * 
-from particles import Particle, FloatingParticle, Spark
+from particles import Particle, FloatingParticle, Spark, spark_collision 
 
 class GameEngine:
     def __init__(self):
@@ -34,7 +34,7 @@ class GameEngine:
         self.scale = 2 
 
     def render(self):
-        self.surf.fill((10, 0, 20))
+        self.surf.fill(OFFWHITE_P)
         
         # PARTICLES 
         for p in self.particles:
@@ -101,7 +101,7 @@ class GameEngine:
         #pg.draw.circle(surf, RED, (right_x, right_y), 1, 0)
         
         spark_points = [(start_x, start_y), (left_x, left_y), (tip_x, tip_y), (right_x, right_y)] 
-        pg.draw.polygon(surf, WHITE, spark_points)
+        #pg.draw.polygon(surf, WHITE, spark_points)
 
     def click_test_func(self):
         #  p, angle, speed, scale, decay_rate, color, steepness=0.3)
@@ -116,6 +116,9 @@ class GameEngine:
             steepness=20
         )
         self.sparks.append(spark)
+
+        spark_collision(self, 10, [80,80], [1,1])
+
 
     def check_inputs(self):
         for e in pg.event.get():

@@ -1,0 +1,4 @@
+
+1. Create tile editor 
+2. Add physics: bouncing, continued movement
+3. Simple things to avoid: tiles, projectiles 

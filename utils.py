@@ -1,5 +1,4 @@
 from settings import * 
-from particles import Spark 
 
 def rnd_percent_chance(probability_per_frame=0.1):
     return random.random() < probability_per_frame
@@ -26,15 +25,9 @@ def v_add(a, b):
 def v_multiply_scalar(v, x):
     return [v[0] * x, v[1] * x]
 
-def spark_collision(pos, vel):
-    
-    spark = Spark(
-            p=pos,
-            angle=self.test_angle,
-            speed=4,
-            scale=0.8, 
-            decay_rate=0.92,
-            limit=0.3,
-            color=WHITE,
-            steepness=20
-        )
+def v_angle(v):
+    angle_rad = math.atan2(v[1], v[0])
+    angle_deg = math.degrees(angle_rad)
+    return angle_deg
+
+
