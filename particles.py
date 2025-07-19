@@ -82,19 +82,19 @@ class Spark:
         ]
         pg.draw.polygon(surf, self.color, points)
 
-def spark_collision(eng, amnt, pos, vel, color, rnd_range=30):
+def spark_collision(eng, amnt, pos, vel, color, scale=0.8, rnd_range=30, decay_rate=[0.9, 0.95]):
     vel = v_multiply_scalar(vel, -1)
     angle = v_angle(vel)
     offset = [math.cos(math.atan(angle))*16, math.sin(math.atan(angle))*16]
     for i in range(amnt): 
         rnd_angle = angle + random.randrange(-rnd_range,rnd_range)
         speed = random.uniform(3.5, 4.5)
-        d_rate = random.uniform(0.9, 0.95)
+        d_rate = random.uniform(decay_rate[0], decay_rate[1])
         spark = Spark(
                 p=[pos[0]-offset[0], pos[1]-offset[1]],
                 angle=rnd_angle,
                 speed=speed,
-                scale=0.8, 
+                scale=scale, 
                 decay_rate=d_rate,
                 limit=0.3,
                 color=color,

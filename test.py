@@ -12,9 +12,14 @@ def norm(v):
     res[1] = res[1] / l
     return res
 
-v = norm(v)
-print(v)
-print(v_length(v))
+def map_value(value, in_min, in_max, out_min, out_max):
+    # Clamp input to avoid overshooting
+    value = max(min(value, in_max), in_min)
+    return out_min + (value - in_min) * (out_max - out_min) / (in_max - in_min)
+
+vel = -1.25  # example velocity, should be negative
+scale = map_value(abs(vel), 0.0, 2.0, 0.1, 0.8)
+print(scale)
 
 ''' 
 pg.draw.rect(self.eng.surf, GREEN, curr_rect)

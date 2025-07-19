@@ -155,7 +155,6 @@ class GameEngine:
                 if e.key == pg.K_s:
                     self.movement[3] = False
 
-
     def run(self):
         while self.running:
             self.check_inputs()
@@ -165,7 +164,6 @@ class GameEngine:
 def main():
     gm = GameEngine()
     gm.run()
-
 
 if __name__ == "__main__":
     main()

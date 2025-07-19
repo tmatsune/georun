@@ -1,9 +1,23 @@
 from settings import * 
 
+# random
 def rnd_percent_chance(probability_per_frame=0.1):
     return random.random() < probability_per_frame
 
+# other 
 def deg_to_rad(deg): return deg * (math.pi/180)
+
+
+def linear_scale(value, in_min, in_max, out_min, out_max):
+    # Clamp input to avoid overshooting
+    value = max(min(value, in_max), in_min)
+    return out_min + (value - in_min) * (out_max - out_min) / (in_max - in_min)
+
+def nonlinear_scale(value, in_min, in_max, out_min, out_max, power=0.7):
+    value = max(min(abs(value), in_max), in_min)        # 1. Clamp input
+    norm = (value - in_min) / (in_max - in_min)         # 2. Normalize
+    curved = norm ** power                              # 3. Nonlinear curve
+    return out_min + curved * (out_max - out_min)       # 4. Map to scale range
 
 # Vector Functions
 def dot(a, b):
