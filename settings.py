@@ -38,6 +38,7 @@ SURROUND_POS = [
 ]
 for p in [[[x - 2, y - 2] for x in range(5)] for y in range(5)]:
     SURROUND_POS += p
+
 '''
 [-1,-1][ 0,-1][ 1, -1]
 [-1, 0][ 0, 0][ 1, 0]
@@ -47,12 +48,14 @@ for p in [[[x - 2, y - 2] for x in range(5)] for y in range(5)]:
 # ACTION CONSTANS 
 GRAVITY = 0.06
 
-# COLORS
+# DEFAULT COLORS
 BLACK = (0,0,0)
 WHITE = (255,255,255)
 RED = (255,0,0)
 GREEN = (0,255,0)
 BLUE = (0,0,255)
+LIGHT_GRAY = (110, 110, 110)
+# OTHER COLORS
 SKY_BLUE = (70,210,255)
 
 # COLOR PALETTE

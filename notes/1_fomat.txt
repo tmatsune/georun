@@ -1,0 +1,8 @@
+
+Folders: statemachine 
+files: statemachine.py 
+classes : StateMachine
+class variables : state_machine = StateMachine() 
+arguments : velocity, position, image
+variables : vel, pos, img
+fumctions : state_handler(), change_state(), jump()

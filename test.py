@@ -17,9 +17,12 @@ def map_value(value, in_min, in_max, out_min, out_max):
     value = max(min(value, in_max), in_min)
     return out_min + (value - in_min) * (out_max - out_min) / (in_max - in_min)
 
-vel = -1.25  # example velocity, should be negative
-scale = map_value(abs(vel), 0.0, 2.0, 0.1, 0.8)
-print(scale)
+vals = [4, 3, 2, 1, 0]
+index = 4 
+index += 1 
+if index >= len(vals):
+    index = 0 
+print(vals[index])
 
 ''' 
 pg.draw.rect(self.eng.surf, GREEN, curr_rect)

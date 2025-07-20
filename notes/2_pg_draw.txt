@@ -1,0 +1,7 @@
+
+pygame.draw.rect(screen, color, (x, y, w, h))
+pygame.draw.circle(screen, color, (x, y), radius)
+
+points = [(300, 300), (350, 250), (400, 300), (350, 350)]
+pygame.draw.polygon(screen, color, points)
+

@@ -73,9 +73,9 @@ class GameEngine:
 
         pos = self.test_pos.copy()
         angle = self.test_angle 
-        angle = deg_to_rad(angle) 
+        angle = math.radians(angle) 
         steepness = 40
-        steepness = deg_to_rad(steepness)
+        steepness = math.radians(steepness)
         speed = self.speed
         scale = 1
         #self.speed *= 0.98
